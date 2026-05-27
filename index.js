@@ -15,7 +15,7 @@ const CLASSES = {
 
 class Version {
     classes = [];
-    icons = [{ n: 'Нет', i: "no_icon"}];
+    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "./images/gm_guild.png", special: true }];
     constructor(classes, icons) {
         this.classes = classes;
         this.icons = this.icons.concat(icons);
@@ -165,7 +165,7 @@ function updateImageOnVersionChange(version) {
                 return new Promise(resolve => {
                     if (userBar.guild.i === "no_icon") return resolve();
 
-                    imageGuild.src = `https://${userBar.version}.comeback.pw/img/ico_guilds/${userBar.guild.i}`;
+                    imageGuild.src = userBar.guild.special ? userBar.guild.i : `https://${userBar.version}.comeback.pw/img/ico_guilds/${userBar.guild.i}`;
                     imageGuild.onload = () => {
                         ctx.drawImage(imageGuild, 455 - guildNameLength.width / 2, 105 + 50, 25, 25);
                         resolve();
