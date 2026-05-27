@@ -1,4 +1,5 @@
 import { icons_146, icons_136 } from "./guild_icons.js";
+import {FontsManager} from "./fonts.js";
 
 const CLASSES = {
     'Воин': [580, 0, 275, 350],
@@ -15,7 +16,7 @@ const CLASSES = {
 
 class Version {
     classes = [];
-    icons = [{ n: 'Нет', i: "no_icon"}];
+    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "./images/gm_guild.png", special: true }];
     constructor(classes, icons) {
         this.classes = classes;
         this.icons = this.icons.concat(icons);
@@ -66,6 +67,7 @@ class UserBar {
     }
 }
 const userBar = new UserBar();
+const fontsManager = new FontsManager();
 
 function getNodeById(id) {
     return document.getElementById(id);
@@ -104,6 +106,10 @@ getNodeById('version').addEventListener('input', (event) => {
     updateSelectOptions("guild", VERSIONS[userBar.version].icons.map(x => x.n));
     updateImageOnVersionChange(userBar.version);
 })
+getNodeById('font').addEventListener('input', (event) => {
+    fontsManager.setCurrentFont(event.target.value);
+    updateImageOnVersionChange(userBar.version);
+})
 getNodeById('username').addEventListener('input', (event) => {
     userBar.setUsername(event.target.value);
     updateImageOnVersionChange(userBar.version);
@@ -128,10 +134,23 @@ getNodeById('search-guild').addEventListener('input', (event) => {
     updateSelectOptions("guild", VERSIONS[userBar.version].icons.map(x => x.n).filter(x => x.toLowerCase().includes(event.target.value.toLowerCase())));
     getNodeById('guild').value = "";
 })
+getNodeById('add-font').addEventListener('click', async (event) => {
+    const newFontLink = prompt("Введите url шрифта");
+    if (!newFontLink) return;
+
+    try {
+        await fontsManager.addFont(newFontLink);
+        alert("Шрифт успешо добавлен");
+        updateSelectOptions("font", fontsManager.fonts);
+    } catch (e) {
+        console.log(e);
+        alert("Ошибка при загрузке шрифта\n" + e);
+    }
+})
 
 function updateImageOnVersionChange(version) {
     const image = new Image();
-    image.src = `./images/default_${version}.png`;
+    image.src = `../images/default_${version}.png`;
 
     const imageCharacter = new Image();
     const imageGuild = new Image();
@@ -146,13 +165,13 @@ function updateImageOnVersionChange(version) {
                 userBar.canvas.height = image.height;
                 ctx.drawImage(image, 0, 0);
 
-                ctx.font = `30px Georgia`;
+                ctx.font = `30px ${fontsManager.current}`;
                 ctx.textAlign = "center";
                 ctx.shadowColor = userBar.colors.shadow;
                 ctx.shadowBlur = 30;
                 ctx.fillStyle = userBar.colors.username;
                 ctx.fillText(userBar.username, 490, 125);
-                ctx.font = `20px Georgia`;
+                ctx.font = `20px ${fontsManager.current}`;
                 ctx.fillStyle = userBar.colors.class;
                 ctx.fillText(`${userBar.class}, ур. ${userBar.level}`, 490, 125 + (2 * 50));
                 ctx.fillStyle = userBar.colors.guild;
@@ -165,7 +184,7 @@ function updateImageOnVersionChange(version) {
                 return new Promise(resolve => {
                     if (userBar.guild.i === "no_icon") return resolve();
 
-                    imageGuild.src = `https://${userBar.version}.comeback.pw/img/ico_guilds/${userBar.guild.i}`;
+                    imageGuild.src = userBar.guild.special ? userBar.guild.i : `https://${userBar.version}.comeback.pw/img/ico_guilds/${userBar.guild.i}`;
                     imageGuild.onload = () => {
                         ctx.drawImage(imageGuild, 455 - guildNameLength.width / 2, 105 + 50, 25, 25);
                         resolve();
@@ -174,7 +193,7 @@ function updateImageOnVersionChange(version) {
                 })
             })
             .then(() => {
-                imageCharacter.src = `./images/classes/${userBar.class}.webp`;
+                imageCharacter.src = `../images/classes/${userBar.class}.webp`;
                 imageCharacter.onload = () => {
                     if (userBar.hideCharacter) return resolveFinal();
 
@@ -186,7 +205,9 @@ function updateImageOnVersionChange(version) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+    await fontsManager.load();
     updateSelectOptions("version", Object.keys(VERSIONS));
+    updateSelectOptions("font", fontsManager.fonts);
     updateSelectOptions("class", userBar.getClasses());
     updateSelectOptions("level", Array.from({ length: 105}, (_, i) => 105 - i));
     getNodeById('version').selectedIndex = 1;
