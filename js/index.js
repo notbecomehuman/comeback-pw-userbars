@@ -135,7 +135,7 @@ getNodeById('search-guild').addEventListener('input', (event) => {
     getNodeById('guild').value = "";
 })
 getNodeById('add-font').addEventListener('click', async (event) => {
-    const newFontLink = prompt("Введите url шритфа");
+    const newFontLink = prompt("Введите url шрифта");
     if (!newFontLink) return;
 
     try {
