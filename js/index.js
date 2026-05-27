@@ -16,7 +16,7 @@ const CLASSES = {
 
 class Version {
     classes = [];
-    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "./images/gm_guild.png", special: true }];
+    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "/comeback-pw-userbars/images/gm_guild.png", special: true }];
     constructor(classes, icons) {
         this.classes = classes;
         this.icons = this.icons.concat(icons);
@@ -150,7 +150,7 @@ getNodeById('add-font').addEventListener('click', async (event) => {
 
 function updateImageOnVersionChange(version) {
     const image = new Image();
-    image.src = `../images/default_${version}.png`;
+    image.src = `/comeback-pw-userbars/images/default_${version}.png`;
 
     const imageCharacter = new Image();
     const imageGuild = new Image();
@@ -193,7 +193,7 @@ function updateImageOnVersionChange(version) {
                 })
             })
             .then(() => {
-                imageCharacter.src = `../images/classes/${userBar.class}.webp`;
+                imageCharacter.src = `/comeback-pw-userbars/images/classes/${userBar.class}.webp`;
                 imageCharacter.onload = () => {
                     if (userBar.hideCharacter) return resolveFinal();
 
