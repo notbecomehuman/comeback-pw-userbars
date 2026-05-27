@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comeback Userbars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <section>
+        <div class="form">
+            <label for="version">Версия</label>
+            <select id="version">
+            </select>
+        </div>
+
+        <div class="form">
+            <label for="guild">Гильдия</label>
+            <div class="flex">
+                <input id="search-guild" placeholder="Поиск" type="text">
+                <div class="flex">
+                    <select style="min-width: 100px;" id="guild">
+                        <option value="Тест">Нет</option>
+                    </select>
+                    <input id="username-color-guild" class="color-picker" value="white" type="color">
+                </div>
+            </div>
+        </div>
+
+        <div class="form">
+            <label for="username">Никнейм</label>
+            <div class="flex">
+                <input id="username" type="text">
+                <input id="username-color-text" class="color-picker" value="white" type="color">
+                <input id="username-color-shadow" class="color-picker" value="black" type="color">
+            </div>
+
+        </div>
+
+        <div class="flex">
+            <div class="form">
+                <label for="level">Уровень</label>
+                <select id="level">
+                    <option value="105">105</option>
+                </select>
+            </div>
+
+            <div class="form">
+                <label for="class">Класс</label>
+                <div class="flex">
+                    <select id="class">
+                        <option value="Воин">Воин</option>
+                    </select>
+                    <input id="username-color-class" class="color-picker" value="white" type="color">
+                </div>
+            </div>
+        </div>
+
+        <div class="form flex">
+            <input style="width: auto; margin-right: 10px;" id="hide-character" type="checkbox">
+            <label for="hide-character">Скрыть персонажа</label>
+        </div>
+
+        <div class="form">
+            <canvas id="result"></canvas>
+        </div>
+    </section>
+</body>
+<script type="module" src="index.js">
+</script>
+</html>
