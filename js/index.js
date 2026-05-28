@@ -23,22 +23,22 @@ function updateSelectOptions(nodeId, elements) {
 
 getNodeById('username-color-text').addEventListener('input', (event) => {
     userBar.colors.username = event.target.value;
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('username-color-shadow').addEventListener('input', (event) => {
     userBar.colors.shadow = event.target.value;
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('username-color-guild').addEventListener('input', (event) => {
     userBar.colors.guild = event.target.value;
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('username-color-class').addEventListener('input', (event) => {
     userBar.colors.class = event.target.value;
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('version').addEventListener('input', (event) => {
@@ -47,37 +47,37 @@ getNodeById('version').addEventListener('input', (event) => {
     userBar.setGuild("Нет");
     updateSelectOptions("class", userBar.getClasses());
     updateSelectOptions("guild", VERSIONS[userBar.version].icons.map(x => x.n));
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('font').addEventListener('input', (event) => {
     fontsManager.setCurrentFont(event.target.value);
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('username').addEventListener('input', (event) => {
     userBar.setUsername(event.target.value);
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('level').addEventListener('input', (event) => {
     userBar.setLevel(event.target.value);
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('class').addEventListener('input', (event) => {
     userBar.setClass(event.target.value);
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('guild').addEventListener('input', (event) => {
     userBar.setGuild(event.target.value);
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('hide-character').addEventListener('input', (event) => {
     userBar.hideCharacter = event.target.checked;
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('search-guild').addEventListener('input', (event) => {
@@ -87,12 +87,12 @@ getNodeById('search-guild').addEventListener('input', (event) => {
 
 getNodeById('previous-background').addEventListener('click', (event) => {
     backgroundManager.previous();
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('next-background').addEventListener('click', (event) => {
     backgroundManager.next();
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
 
 getNodeById('add-font').addEventListener('click', async (event) => {
@@ -107,9 +107,24 @@ getNodeById('add-font').addEventListener('click', async (event) => {
         console.log(e);
         alert("Ошибка при загрузке шрифта\n" + e);
     }
-})
+});
 
-function updateImageOnVersionChange(version) {
+getNodeById('download').addEventListener('click', (event) => {
+    const canvas = getNodeById('result');
+    canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${userBar.username}_userbar.png`;
+
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }, 'image/png');
+});
+
+function updateImageOnVersionChange() {
     const canvasBackground = new Image();
     canvasBackground.src = `/comeback-pw-userbars/images/backgrounds/${backgroundManager.getCurrent()}`;
 
@@ -129,7 +144,7 @@ function updateImageOnVersionChange(version) {
             .then(() => {
                 return new Promise(resolve => {
                     const imageEntities = new Image();
-                    imageEntities.src = `/comeback-pw-userbars/images/backgrounds/default_${version}.png`;;
+                    imageEntities.src = `/comeback-pw-userbars/images/backgrounds/default_${userBar.version}.png`;
                     imageEntities.onload = () => {
                         ctx.drawImage(imageEntities, 0, 0);
 
@@ -189,5 +204,5 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     userBar.canvas = document.getElementById("result");
 
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
