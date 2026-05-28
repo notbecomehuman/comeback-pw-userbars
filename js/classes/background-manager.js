@@ -1,7 +1,17 @@
 export class BackgroundManager {
     defaultBackgrounds = [
         "sakura_garden.png",
-        "cold_mountain.png"
+        "cold_mountain.png",
+        "desert_mountain.png",
+        "star_lake.png",
+        "comeback_prison.jpg",
+        "comeback_plate.jpg",
+        "comeback_tsunami.jpg",
+        "comeback_drevnie.jpg",
+        "comeback_gavgav.jpg",
+        "comeback_humans.jpg",
+        "comeback_istoki.jpg",
+        "comeback_sids.jpg",
     ]
     current = 0;
     roundBackground = true;
