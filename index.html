@@ -67,9 +67,24 @@
             <input style="width: auto; margin-right: 10px;" id="hide-character" type="checkbox">
             <label for="hide-character">Скрыть персонажа</label>
         </div>
+        <div class="form flex">
+            <input checked="true" style="width: auto; margin-right: 10px;" id="round-background" type="checkbox">
+            <label for="round-background">Закруглить края</label>
+        </div>
 
         <div class="form">
             <canvas id="result"></canvas>
+        </div>
+        <div style="justify-content: space-between;" class="form flex">
+            <button id="previous-background"><</button>
+            <button id="next-background">></button>
+        </div>
+        <div class="form">
+            <div style="justify-content: space-between; margin-top: 20px;" class="flex">
+                <input accept="image/*" id="upload-input" style="display: none;" type="file">
+                <button id="upload-background">Загрузить свой фон</button>
+                <button id="download">Скачать юзербар</button>
+            </div>
         </div>
     </section>
 </body>

@@ -1,73 +1,12 @@
-import { icons_146, icons_136 } from "./guild_icons.js";
-import {FontsManager} from "./fonts.js";
+import {FontsManager} from "./classes/fonts-manager.js";
+import {CLASSES} from "./config/classes.js";
+import {VERSIONS} from "./config/versions.js";
+import {UserBar} from "./classes/userbar.js";
+import {BackgroundManager} from "./classes/background-manager.js";
 
-const CLASSES = {
-    'Воин': [580, 0, 275, 350],
-    'Маг': [560, 0, 250, 350],
-    'Оборотень': [590, 0, 250, 350],
-    'Друид': [550, 0, 250, 350],
-    'Лучник': [500, 50, 400, 300],
-    'Жрец': [570, 50, 300, 250],
-    'Убийца': [580, 50, 250, 300],
-    'Шаман': [580, 0, 250, 350],
-    'Страж': [500, 0, 250, 350],
-    'Мистик': [570, -10, 220, 350],
-};
-
-class Version {
-    classes = [];
-    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "/comeback-pw-userbars/images/gm_guild.png", special: true }];
-    constructor(classes, icons) {
-        this.classes = classes;
-        this.icons = this.icons.concat(icons);
-    }
-}
-const VERSIONS = {
-    "136": new Version(Object.keys(CLASSES).slice(0, 6), icons_136),
-    "146": new Version(Object.keys(CLASSES), icons_146),
-}
-
-class UserBar {
-    version = Object.keys(VERSIONS)[1];
-    username = null;
-    level = 105;
-    guild = VERSIONS[this.version].icons[0];
-    class = Object.keys(CLASSES)[0];
-    canvas = null;
-    hideCharacter = false;
-    colors = {
-        username: "white",
-        shadow: "black",
-        guild: "white",
-        class: "white",
-    }
-
-    getClasses() {
-        return VERSIONS[this.version].classes;
-    }
-    setVersion(newVersion) {
-        if (!Object.keys(VERSIONS).includes(newVersion)) throw new Error("Неизвестная версия");
-
-        this.version = newVersion;
-    }
-    setUsername(newUsername) {
-        this.username = newUsername;
-    }
-    setLevel(newLevel) {
-        this.level = newLevel;
-    }
-    setClass(newClass) {
-        if (!VERSIONS[this.version].classes.includes(newClass)) throw new Error("Неизвестный класс");
-        this.class = newClass;
-    }
-    setGuild(newGuild) {
-        const guildInfo = VERSIONS[this.version].icons.find(x => x.n === newGuild);
-        if (!guildInfo) throw new Error("Неизвестная гильдия");
-        this.guild = guildInfo;
-    }
-}
 const userBar = new UserBar();
 const fontsManager = new FontsManager();
+const backgroundManager = new BackgroundManager();
 
 function getNodeById(id) {
     return document.getElementById(id);
@@ -84,56 +23,78 @@ function updateSelectOptions(nodeId, elements) {
 
 getNodeById('username-color-text').addEventListener('input', (event) => {
     userBar.colors.username = event.target.value;
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('username-color-shadow').addEventListener('input', (event) => {
     userBar.colors.shadow = event.target.value;
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('username-color-guild').addEventListener('input', (event) => {
     userBar.colors.guild = event.target.value;
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('username-color-class').addEventListener('input', (event) => {
     userBar.colors.class = event.target.value;
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('version').addEventListener('input', (event) => {
     userBar.setVersion(event.target.value);
     userBar.setClass(VERSIONS[userBar.version].classes[0]);
     userBar.setGuild("Нет");
     updateSelectOptions("class", userBar.getClasses());
     updateSelectOptions("guild", VERSIONS[userBar.version].icons.map(x => x.n));
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('font').addEventListener('input', (event) => {
     fontsManager.setCurrentFont(event.target.value);
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('username').addEventListener('input', (event) => {
     userBar.setUsername(event.target.value);
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('level').addEventListener('input', (event) => {
     userBar.setLevel(event.target.value);
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('class').addEventListener('input', (event) => {
     userBar.setClass(event.target.value);
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('guild').addEventListener('input', (event) => {
     userBar.setGuild(event.target.value);
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('hide-character').addEventListener('input', (event) => {
     userBar.hideCharacter = event.target.checked;
-    updateImageOnVersionChange(userBar.version);
-})
+    updateImageOnVersionChange();
+});
+
 getNodeById('search-guild').addEventListener('input', (event) => {
     updateSelectOptions("guild", VERSIONS[userBar.version].icons.map(x => x.n).filter(x => x.toLowerCase().includes(event.target.value.toLowerCase())));
     getNodeById('guild').value = "";
-})
+});
+
+getNodeById('previous-background').addEventListener('click', (event) => {
+    backgroundManager.previous();
+    updateImageOnVersionChange();
+});
+
+getNodeById('next-background').addEventListener('click', (event) => {
+    backgroundManager.next();
+    updateImageOnVersionChange();
+});
+
 getNodeById('add-font').addEventListener('click', async (event) => {
     const newFontLink = prompt("Введите url шрифта");
     if (!newFontLink) return;
@@ -146,46 +107,96 @@ getNodeById('add-font').addEventListener('click', async (event) => {
         console.log(e);
         alert("Ошибка при загрузке шрифта\n" + e);
     }
+});
+
+getNodeById('download').addEventListener('click', (event) => {
+    const canvas = getNodeById('result');
+    canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${userBar.username}_userbar.png`;
+
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }, 'image/png');
+});
+
+getNodeById('upload-background').addEventListener('click', (event) => {
+    getNodeById("upload-input").click();
+});
+
+getNodeById('upload-input').addEventListener('change', (event) => {
+    const file = getNodeById('upload-input').files[0];
+    if (!file) return;
+
+    backgroundManager.addCustomBackground(URL.createObjectURL(file));
+    updateImageOnVersionChange();
+});
+
+getNodeById('round-background').addEventListener('click', (event) => {
+    backgroundManager.setRound(event.target.checked);
+    updateImageOnVersionChange();
 })
 
-function updateImageOnVersionChange(version) {
-    const image = new Image();
-    image.src = `/comeback-pw-userbars/images/default_${version}.png`;
+function updateImageOnVersionChange() {
+    const canvasBackground = new Image();
+    const currentSrc = backgroundManager.getCurrent();
+    canvasBackground.src = currentSrc.includes("blob:") ? currentSrc : `/comeback-pw-userbars/images/backgrounds/${currentSrc}`;
 
-    const imageCharacter = new Image();
-    const imageGuild = new Image();
 
     const ctx = userBar.canvas.getContext("2d");
-    const guildNameLength = ctx.measureText(`${userBar.guild.n}`);
     return new Promise(resolveFinal => {
         new Promise(resolve => {
             ctx.clearRect(0, 0, userBar.canvas.width, userBar.canvas.height);
-            image.onload = () => {
-                userBar.canvas.width = image.width;
-                userBar.canvas.height = image.height;
-                ctx.drawImage(image, 0, 0);
+            canvasBackground.onload = () => {
+                userBar.canvas.width = 750;
+                userBar.canvas.height = 329;
 
-                ctx.font = `30px ${fontsManager.current}`;
-                ctx.textAlign = "center";
-                ctx.shadowColor = userBar.colors.shadow;
-                ctx.shadowBlur = 30;
-                ctx.fillStyle = userBar.colors.username;
-                ctx.fillText(userBar.username, 490, 125);
-                ctx.font = `20px ${fontsManager.current}`;
-                ctx.fillStyle = userBar.colors.class;
-                ctx.fillText(`${userBar.class}, ур. ${userBar.level}`, 490, 125 + (2 * 50));
-                ctx.fillStyle = userBar.colors.guild;
-                ctx.fillText(`${userBar.guild.n}`, 490, 125 + 50);
-                ctx.shadowBlur = 0;
+                if (backgroundManager.roundBackground) {
+                    ctx.beginPath();
+                    ctx.roundRect(0, 0, userBar.canvas.width, userBar.canvas.height, 30);
+                    ctx.clip();
+                }
+                ctx.drawImage(canvasBackground, 0, 0, 750, 329);
+                ctx.restore();
+
                 resolve();
             }
         })
             .then(() => {
                 return new Promise(resolve => {
+                    const imageEntities = new Image();
+                    imageEntities.src = `/comeback-pw-userbars/images/backgrounds/default_${userBar.version}.png`;
+                    imageEntities.onload = () => {
+                        ctx.drawImage(imageEntities, 0, 0);
+
+                        ctx.font = `30px ${fontsManager.current}`;
+                        ctx.textAlign = "center";
+                        ctx.shadowColor = userBar.colors.shadow;
+                        ctx.shadowBlur = 30;
+                        ctx.fillStyle = userBar.colors.username;
+                        ctx.fillText(userBar.username, 490, 130);
+                        ctx.font = `20px ${fontsManager.current}`;
+                        ctx.fillStyle = userBar.colors.class;
+                        ctx.fillText(`${userBar.class}, ур. ${userBar.level}`, 490, 120 + (2 * 50));
+                        ctx.fillStyle = userBar.colors.guild;
+                        ctx.fillText(`${userBar.guild.n}`, 490, 125 + 50);
+                        ctx.shadowBlur = 0;
+                        resolve();
+                    }
+                })
+            })
+            .then(() => {
+                return new Promise(resolve => {
                     if (userBar.guild.i === "no_icon") return resolve();
 
+                    const imageGuild = new Image();
                     imageGuild.src = userBar.guild.special ? userBar.guild.i : `https://${userBar.version}.comeback.pw/img/ico_guilds/${userBar.guild.i}`;
                     imageGuild.onload = () => {
+                        const guildNameLength = ctx.measureText(`${userBar.guild.n}`);
                         ctx.drawImage(imageGuild, 455 - guildNameLength.width / 2, 105 + 50, 25, 25);
                         resolve();
                     }
@@ -193,6 +204,7 @@ function updateImageOnVersionChange(version) {
                 })
             })
             .then(() => {
+                const imageCharacter = new Image();
                 imageCharacter.src = `/comeback-pw-userbars/images/classes/${userBar.class}.webp`;
                 imageCharacter.onload = () => {
                     if (userBar.hideCharacter) return resolveFinal();
@@ -217,5 +229,5 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     userBar.canvas = document.getElementById("result");
 
-    updateImageOnVersionChange(userBar.version);
+    updateImageOnVersionChange();
 });
