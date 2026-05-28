@@ -124,9 +124,27 @@ getNodeById('download').addEventListener('click', (event) => {
     }, 'image/png');
 });
 
+getNodeById('upload-background').addEventListener('click', (event) => {
+    getNodeById("upload-input").click();
+});
+
+getNodeById('upload-input').addEventListener('change', (event) => {
+    const file = getNodeById('upload-input').files[0];
+    if (!file) return;
+
+    backgroundManager.addCustomBackground(URL.createObjectURL(file));
+    updateImageOnVersionChange();
+});
+
+getNodeById('round-background').addEventListener('click', (event) => {
+    backgroundManager.setRound(event.target.checked);
+    updateImageOnVersionChange();
+})
+
 function updateImageOnVersionChange() {
     const canvasBackground = new Image();
-    canvasBackground.src = `/comeback-pw-userbars/images/backgrounds/${backgroundManager.getCurrent()}`;
+    const currentSrc = backgroundManager.getCurrent();
+    canvasBackground.src = currentSrc.includes("blob:") ? currentSrc : `/comeback-pw-userbars/images/backgrounds/${currentSrc}`;
 
 
     const ctx = userBar.canvas.getContext("2d");
@@ -136,7 +154,14 @@ function updateImageOnVersionChange() {
             canvasBackground.onload = () => {
                 userBar.canvas.width = 750;
                 userBar.canvas.height = 329;
+
+                if (backgroundManager.roundBackground) {
+                    ctx.beginPath();
+                    ctx.roundRect(0, 0, userBar.canvas.width, userBar.canvas.height, 30);
+                    ctx.clip();
+                }
                 ctx.drawImage(canvasBackground, 0, 0, 750, 329);
+                ctx.restore();
 
                 resolve();
             }
