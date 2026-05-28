@@ -1,71 +1,8 @@
-import { icons_146, icons_136 } from "./guild_icons.js";
-import {FontsManager} from "./fonts.js";
+import {FontsManager} from "./classes/fonts-manager.js";
+import {CLASSES} from "./config/classes.js";
+import {VERSIONS} from "./config/versions.js";
+import {UserBar} from "./classes/userbar.js";
 
-const CLASSES = {
-    'Воин': [580, 0, 275, 350],
-    'Маг': [560, 0, 250, 350],
-    'Оборотень': [590, 0, 250, 350],
-    'Друид': [550, 0, 250, 350],
-    'Лучник': [500, 50, 400, 300],
-    'Жрец': [570, 50, 300, 250],
-    'Убийца': [580, 50, 250, 300],
-    'Шаман': [580, 0, 250, 350],
-    'Страж': [500, 0, 250, 350],
-    'Мистик': [570, -10, 220, 350],
-};
-
-class Version {
-    classes = [];
-    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "/comeback-pw-userbars/images/gm_guild.png", special: true }];
-    constructor(classes, icons) {
-        this.classes = classes;
-        this.icons = this.icons.concat(icons);
-    }
-}
-const VERSIONS = {
-    "136": new Version(Object.keys(CLASSES).slice(0, 6), icons_136),
-    "146": new Version(Object.keys(CLASSES), icons_146),
-}
-
-class UserBar {
-    version = Object.keys(VERSIONS)[1];
-    username = null;
-    level = 105;
-    guild = VERSIONS[this.version].icons[0];
-    class = Object.keys(CLASSES)[0];
-    canvas = null;
-    hideCharacter = false;
-    colors = {
-        username: "white",
-        shadow: "black",
-        guild: "white",
-        class: "white",
-    }
-
-    getClasses() {
-        return VERSIONS[this.version].classes;
-    }
-    setVersion(newVersion) {
-        if (!Object.keys(VERSIONS).includes(newVersion)) throw new Error("Неизвестная версия");
-
-        this.version = newVersion;
-    }
-    setUsername(newUsername) {
-        this.username = newUsername;
-    }
-    setLevel(newLevel) {
-        this.level = newLevel;
-    }
-    setClass(newClass) {
-        if (!VERSIONS[this.version].classes.includes(newClass)) throw new Error("Неизвестный класс");
-        this.class = newClass;
-    }
-    setGuild(newGuild) {
-        const guildInfo = VERSIONS[this.version].icons.find(x => x.n === newGuild);
-        if (!guildInfo) throw new Error("Неизвестная гильдия");
-        this.guild = guildInfo;
-    }
-}
 const userBar = new UserBar();
 const fontsManager = new FontsManager();
 
