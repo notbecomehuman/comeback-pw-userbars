@@ -2,8 +2,25 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
+    background-color: #000;
 }
 
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: url("./images/main-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    filter: blur(6px);
+    transform: scale(1);
+
+    z-index: 0;
+}
 input, select, button {
     box-sizing: border-box;
     height: 27px;
@@ -11,6 +28,7 @@ input, select, button {
 
 section {
     width: 500px;
+    z-index: 1;
 }
 
 div.form {
