@@ -109,21 +109,6 @@ getNodeById('add-font').addEventListener('click', async (event) => {
     }
 });
 
-getNodeById('download').addEventListener('click', (event) => {
-    const canvas = getNodeById('result');
-    canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${userBar.username}_userbar.png`;
-
-        link.click();
-
-        URL.revokeObjectURL(url);
-    }, 'image/png');
-});
-
 getNodeById('upload-background').addEventListener('click', (event) => {
     getNodeById("upload-input").click();
 });
