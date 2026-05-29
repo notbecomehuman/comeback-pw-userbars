@@ -59,9 +59,9 @@ export class FontsManager {
             const fontName = match[1].replace(/\+/g, ' ');
             await new Promise((resolve, reject) => { link.onload = resolve; link.onerror = reject; });
 
-            this.fonts.push(fontName);
             await document.fonts.load(`30px ${fontName}`, "Test - тест");
             await document.fonts.load(`20px ${fontName}`, "Test - тест");
+            this.fonts.push(fontName);
         } catch (e) {
             throw e;
         }
