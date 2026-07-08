@@ -3,7 +3,7 @@ import { CLASSES } from "./classes.js";
 
 class Version {
     classes = [];
-    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "/comeback-pw-userbars/images/gm_guild.png", special: true }];
+    icons = [{ n: 'Нет', i: "no_icon", special: true }, { n: "Comeback", i: "/comeback-pw-userbars/images/gm_guild.png", special: true }, { n: "No Fate", i: "2_4761.png" }];
     constructor(classes, icons) {
         this.classes = classes;
         this.icons = this.icons.concat(icons);
